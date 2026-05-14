@@ -86,7 +86,7 @@ button:disabled {
   color: #fff;
   margin: 0 auto;
   max-width: 1040px;
-  padding: 56px 0 28px;
+  padding: 20px 0 28px;
 }
 
 .eyebrow {
@@ -372,7 +372,7 @@ details.multiselect {
   }
 
   .hero {
-    padding: 34px 0 22px;
+    padding: 18px 0 22px;
   }
 
   .form-panel,
