@@ -103,16 +103,17 @@ export async function POST(request: Request) {
     }
 
     const airtableResponse = await createProjectSubmission(payload);
+    const recordId = airtableResponse.records[0]?.id || null;
 
     try {
-      await notifySlack(payload);
+      await notifySlack(payload, { recordId });
     } catch (error) {
       console.error(error);
     }
 
     return NextResponse.json({
       ok: true,
-      recordId: airtableResponse.records[0]?.id || null
+      recordId
     });
   } catch (error) {
     const cause =

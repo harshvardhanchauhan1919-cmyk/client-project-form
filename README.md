@@ -35,6 +35,10 @@ The Airtable token must have access to the Stratverse base and include:
 `SLACK_PROJECT_SUBMISSIONS_WEBHOOK_URL` is optional. Leave it blank until the
 Slack channel/webhook is ready.
 
+When `SLACK_PROJECT_SUBMISSIONS_WEBHOOK_URL` is set, every successful public
+form submission posts a real-time message to the connected Slack channel after
+the Airtable record is created.
+
 Then run:
 
 ```powershell
