@@ -93,7 +93,7 @@ export default function Home() {
 
       <section className="hero">
         <p className="eyebrow">Client Project Intake</p>
-        <h2>Tell us what you need to build, solve, or accelerate.</h2>
+        <h2>Tell us where you need consulting support.</h2>
         <p>
           Share the project context and requirements. This should take about 10
           to 15 minutes, and helps us match you with the right consulting talent.
