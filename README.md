@@ -78,3 +78,36 @@ review.
 
 Set the same environment variables in Vercel Project Settings before deploying.
 Never expose `AIRTABLE_PAT` in browser code.
+
+## Domain Linking
+
+After the Vercel deployment is working, link the form to a Stratverse domain.
+
+Recommended approach:
+
+1. Choose the final URL, for example:
+   - `projects.stratverse.co`
+   - `intake.stratverse.co`
+   - `stratverse.co/project-intake`
+2. In Vercel, open the Client Project Form project.
+3. Go to `Settings -> Domains`.
+4. Add the chosen domain or subdomain.
+5. Follow Vercel's DNS instructions.
+6. In the DNS provider for `stratverse.co`, add the required DNS record.
+
+Typical subdomain setup:
+
+```text
+Type: CNAME
+Name: projects
+Value: cname.vercel-dns.com
+```
+
+Use the exact record Vercel shows, since it can differ by domain setup.
+
+Completion criteria:
+
+- Vercel shows the domain as valid.
+- HTTPS certificate is issued.
+- The public domain loads the form.
+- A test submission from the public domain reaches Airtable.
