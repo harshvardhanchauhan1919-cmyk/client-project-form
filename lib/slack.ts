@@ -1,7 +1,25 @@
 import { config } from "./config";
 import type { ProjectSubmissionPayload } from "./airtable";
 
-export async function notifySlack(payload: ProjectSubmissionPayload) {
+type SlackNotificationOptions = {
+  recordId?: string | null;
+};
+
+function field(label: string, value: string | string[] | null | undefined) {
+  const displayValue = Array.isArray(value)
+    ? value.join(", ")
+    : value?.trim() || "Not specified";
+
+  return {
+    type: "mrkdwn",
+    text: `*${label}*\n${displayValue}`
+  };
+}
+
+export async function notifySlack(
+  payload: ProjectSubmissionPayload,
+  options: SlackNotificationOptions = {}
+) {
   if (!config.slackWebhookUrl) {
     return;
   }
@@ -16,18 +34,39 @@ export async function notifySlack(payload: ProjectSubmissionPayload) {
           type: "header",
           text: {
             type: "plain_text",
-            text: "New client project submission"
+            text: "New client project submission",
+            emoji: true
+          }
+        },
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: `*${payload.projectName}* was submitted by ${payload.fullName} from ${payload.company}.`
           }
         },
         {
           type: "section",
           fields: [
-            { type: "mrkdwn", text: `*Project*\n${payload.projectName}` },
-            { type: "mrkdwn", text: `*Company*\n${payload.company}` },
-            { type: "mrkdwn", text: `*Contact*\n${payload.fullName}` },
-            { type: "mrkdwn", text: `*Email*\n${payload.email}` },
-            { type: "mrkdwn", text: `*Location*\n${payload.location || "Not specified"}` },
-            { type: "mrkdwn", text: `*Start*\n${payload.projectStart || "Not specified"}` }
+            field("Company", payload.company),
+            field("Contact", payload.fullName),
+            field("Email", payload.email),
+            field("WhatsApp", payload.whatsappNumber),
+            field("Role/Level", payload.roleLevel),
+            field("Daily Rate", payload.dailyRate),
+            field("Work Model", payload.workModel),
+            field("Location", payload.location),
+            field("Start", payload.projectStart),
+            field("Duration", payload.projectDuration)
+          ]
+        },
+        {
+          type: "context",
+          elements: [
+            {
+              type: "mrkdwn",
+              text: `Airtable record: ${options.recordId || "created"}`
+            }
           ]
         }
       ]
