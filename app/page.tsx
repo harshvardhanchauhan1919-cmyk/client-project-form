@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { FormEvent, useState } from "react";
 import {
   expensesPolicyOptions,
@@ -358,7 +359,13 @@ export default function Home() {
 function Topbar() {
   return (
     <header className="topbar">
-      <div className="brand">Stratverse</div>
+      <Image
+        alt="Stratverse"
+        className="brand-logo"
+        height="19"
+        src="/brand/stratverse-logo-white.svg"
+        width="114"
+      />
       <a className="site-link" href="https://stratverse.co" rel="noreferrer" target="_blank">
         stratverse.co
       </a>
