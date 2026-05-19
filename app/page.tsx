@@ -362,9 +362,9 @@ function Topbar() {
       <Image
         alt="Stratverse"
         className="brand-logo"
-        height="19"
+        height="24"
         src="/brand/stratverse-logo-white.svg"
-        width="114"
+        width="144"
       />
       <a className="site-link" href="https://stratverse.co" rel="noreferrer" target="_blank">
         stratverse.co
