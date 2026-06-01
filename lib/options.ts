@@ -1,7 +1,8 @@
 export const roleLevelOptions = [
-  "SBA/Associate (DR: $700-$1000 USD)",
-  "Consultant (DR: $1000-$1200 USD)",
-  "Engagement Manager (DR: $1200-$1500 USD)"
+  "Business analyst / senior consultant (1-3 years experience)",
+  "Associate (3-5 years experience)",
+  "Engagement Manager (5-7 years experience)",
+  "Principal / associate director (8+ years experience)"
 ] as const;
 
 export const visaRequirementOptions = [
