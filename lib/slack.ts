@@ -61,6 +61,10 @@ export async function notifySlack(
           ]
         },
         {
+          type: "section",
+          text: field("Project Description", payload.projectDescription)
+        },
+        {
           type: "context",
           elements: [
             {
