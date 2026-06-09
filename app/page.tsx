@@ -3,8 +3,9 @@
 import Image from "next/image";
 import { FormEvent, useState } from "react";
 import {
+  categoryOptions,
   expensesPolicyOptions,
-  roleLevelOptions,
+  roleOptionsByCategory,
   visaRequirementOptions,
   workModelOptions
 } from "@/lib/options";
@@ -14,7 +15,9 @@ type Message = { type: "error" | "success"; text: string } | null;
 const initialForm = {
   projectName: "",
   projectDescription: "",
-  roleLevel: [] as string[],
+  category: "",
+  roleLevel: "",
+  otherDetails: "",
   dailyRate: "",
   visaRequirements: "",
   expensesPolicy: "",
@@ -37,14 +40,10 @@ export default function Home() {
   const [message, setMessage] = useState<Message>(null);
   const [submitted, setSubmitted] = useState(false);
 
-  function toggleRoleLevel(option: string) {
-    setForm((current) => ({
-      ...current,
-      roleLevel: current.roleLevel.includes(option)
-        ? current.roleLevel.filter((item) => item !== option)
-        : [...current.roleLevel, option]
-    }));
-  }
+  const selectedRoleOptions =
+    form.category === "Consulting" || form.category === "Tech"
+      ? roleOptionsByCategory[form.category]
+      : [];
 
   async function submitProject(event: FormEvent) {
     event.preventDefault();
@@ -140,27 +139,70 @@ export default function Home() {
               />
             </Field>
 
-            <Field label="Role/Level" htmlFor="roleLevel" full>
-              <details className="multiselect">
-                <summary id="roleLevel">
-                  {form.roleLevel.length > 0
-                    ? form.roleLevel.join(", ")
-                    : "Select one or more role levels"}
-                </summary>
-                <div className="multi-menu" role="group" aria-labelledby="roleLevel">
-                  {roleLevelOptions.map((option) => (
-                    <label className="check-option" key={option}>
-                      <input
-                        type="checkbox"
-                        checked={form.roleLevel.includes(option)}
-                        onChange={() => toggleRoleLevel(option)}
-                      />
-                      <span>{option}</span>
-                    </label>
-                  ))}
-                </div>
-              </details>
+            <Field label="Category" htmlFor="category">
+              <select
+                id="category"
+                required
+                value={form.category}
+                onChange={(event) =>
+                  setForm({
+                    ...form,
+                    category: event.target.value,
+                    roleLevel: "",
+                    otherDetails: ""
+                  })
+                }
+              >
+                <option value="">Select category</option>
+                {categoryOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
             </Field>
+
+            <Field label="Role" htmlFor="roleLevel">
+              <select
+                id="roleLevel"
+                required
+                disabled={!form.category}
+                value={form.roleLevel}
+                onChange={(event) => {
+                  const roleLevel = event.target.value;
+                  setForm({
+                    ...form,
+                    roleLevel,
+                    otherDetails: roleLevel === "Other" ? form.otherDetails : ""
+                  });
+                }}
+              >
+                <option value="">
+                  {form.category ? "Select role" : "Select category first"}
+                </option>
+                {selectedRoleOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </Field>
+
+            {form.roleLevel === "Other" && (
+              <Field label="Other Details" htmlFor="otherDetails" full>
+                <input
+                  id="otherDetails"
+                  required
+                  placeholder={
+                    form.category === "Tech" ? "e.g. Data Scientist" : "e.g. Chief of Staff"
+                  }
+                  value={form.otherDetails}
+                  onChange={(event) =>
+                    setForm({ ...form, otherDetails: event.target.value })
+                  }
+                />
+              </Field>
+            )}
 
             <Field label="Daily Rate" htmlFor="dailyRate">
               <input

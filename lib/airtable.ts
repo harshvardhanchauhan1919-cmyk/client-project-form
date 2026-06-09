@@ -4,7 +4,9 @@ import { defaultProjectStatus } from "./options";
 export type ProjectSubmissionPayload = {
   projectName: string;
   projectDescription: string;
-  roleLevel: string[];
+  category: string;
+  roleLevel: string;
+  otherDetails: string;
   dailyRate: string;
   visaRequirements: string;
   expensesPolicy: string;
@@ -63,7 +65,9 @@ export async function createProjectSubmission(payload: ProjectSubmissionPayload)
   const fields: Record<string, unknown> = {
     "Project Name": payload.projectName,
     "Project Description": payload.projectDescription,
-    "Role/Level": payload.roleLevel,
+    Category: payload.category,
+    "Role/Level": [payload.roleLevel],
+    "Other Details": payload.otherDetails,
     "Daily Rate": payload.dailyRate,
     "Visa Requirements": payload.visaRequirements,
     "Expenses Policy": payload.expensesPolicy,

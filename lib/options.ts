@@ -1,8 +1,23 @@
-export const roleLevelOptions = [
+export const categoryOptions = ["Consulting", "Tech"] as const;
+
+export const consultingRoleOptions = [
   "Business analyst / senior consultant (1-3 years experience)",
   "Associate (3-5 years experience)",
   "Engagement Manager (5-7 years experience)",
-  "Principal / associate director (8+ years experience)"
+  "Principal / associate director (8+ years experience)",
+  "Other"
+] as const;
+
+export const techRoleOptions = ["Product Manager", "Product Owner", "PMO", "Other"] as const;
+
+export const roleOptionsByCategory = {
+  Consulting: consultingRoleOptions,
+  Tech: techRoleOptions
+} as const;
+
+export const roleLevelOptions = [
+  ...consultingRoleOptions,
+  ...techRoleOptions
 ] as const;
 
 export const visaRequirementOptions = [
