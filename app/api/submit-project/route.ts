@@ -4,7 +4,9 @@ import {
   type ProjectSubmissionPayload
 } from "@/lib/airtable";
 import {
+  categoryOptions,
   expensesPolicyOptions,
+  roleOptionsByCategory,
   roleLevelOptions,
   visaRequirementOptions,
   workModelOptions
@@ -14,6 +16,7 @@ import { notifySlack } from "@/lib/slack";
 const requiredFields: Array<keyof ProjectSubmissionPayload> = [
   "projectName",
   "projectDescription",
+  "category",
   "roleLevel",
   "dailyRate",
   "visaRequirements",
@@ -46,11 +49,22 @@ function validatePayload(payload: ProjectSubmissionPayload) {
     return "Please enter a valid email address.";
   }
 
-  const invalidRole = payload.roleLevel.find(
-    (item) => !isValidOption(item, roleLevelOptions)
-  );
-  if (invalidRole) {
-    return "Please select a valid role/level option.";
+  if (!isValidOption(payload.category, categoryOptions)) {
+    return "Please select a valid category option.";
+  }
+
+  if (!isValidOption(payload.roleLevel, roleLevelOptions)) {
+    return "Please select a valid role option.";
+  }
+
+  const categoryRoleOptions =
+    roleOptionsByCategory[payload.category as keyof typeof roleOptionsByCategory];
+  if (!isValidOption(payload.roleLevel, categoryRoleOptions)) {
+    return "Please select a role that matches the selected category.";
+  }
+
+  if (payload.roleLevel === "Other" && !payload.otherDetails.trim()) {
+    return "Please describe the role in Other Details.";
   }
 
   if (!isValidOption(payload.visaRequirements, visaRequirementOptions)) {
@@ -79,9 +93,11 @@ export async function POST(request: Request) {
     const payload: ProjectSubmissionPayload = {
       projectName: String(body.projectName || "").trim(),
       projectDescription: String(body.projectDescription || "").trim(),
+      category: String(body.category || "").trim(),
       roleLevel: Array.isArray(body.roleLevel)
-        ? body.roleLevel.filter((item: unknown): item is string => typeof item === "string")
-        : [],
+        ? String(body.roleLevel[0] || "").trim()
+        : String(body.roleLevel || "").trim(),
+      otherDetails: String(body.otherDetails || "").trim(),
       dailyRate: String(body.dailyRate || "").trim(),
       visaRequirements: String(body.visaRequirements || "").trim(),
       expensesPolicy: String(body.expensesPolicy || "").trim(),
